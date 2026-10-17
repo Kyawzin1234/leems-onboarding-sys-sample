@@ -1,0 +1,311 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>LEEMS Made Simple</title>
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div class="app">
+
+  <aside>
+    <div class="brand">
+      <div class="logo">L</div>
+      <div>
+        <strong>LEEMS</strong>
+        <small>Your work, made simple</small>
+      </div>
+    </div>
+
+    <div class="viewing">
+      <label for="acting-as">Viewing as (demo)</label>
+      <select id="acting-as"></select>
+    </div>
+
+    <nav class="nav" aria-label="Main">
+      <button class="nav-btn" data-page="home" aria-current="page"><span class="ico">🏠</span> Home</button>
+      <button class="nav-btn" data-page="tasks"><span class="ico">✅</span> My Tasks</button>
+      <button class="nav-btn" data-page="board"><span class="ico">🗂️</span> Task Board</button>
+      <button class="nav-btn" data-page="team"><span class="ico">👥</span> Team</button>
+      <button class="nav-btn" data-page="access"><span class="ico">🔐</span> Access</button>
+      <button class="nav-btn" data-page="activity"><span class="ico">🕒</span> Activity</button>
+      <button class="nav-btn" data-page="metrics"><span class="ico">📈</span> Metrics</button>
+      <button class="nav-btn" data-page="export"><span class="ico">📤</span> Export</button>
+      <button class="nav-btn" data-page="help"><span class="ico">💡</span> How It Works</button>
+    </nav>
+
+    <button class="btn btn-tour" id="start-tour">Take the quick tour</button>
+    <div class="aside-foot">Your changes save on this device. Export a backup from the Export page.</div>
+  </aside>
+
+  <main>
+
+    <!-- HOME -->
+    <section class="page active" id="page-home">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow" id="today-label"></div>
+          <h1 id="hello">Hello</h1>
+          <p>Here is a quick look at your work. You don't need to do anything special, just read and click.</p>
+        </div>
+        <button class="btn btn-primary" data-go="tasks">See my tasks</button>
+      </div>
+
+      <div class="tip">
+        <div class="ico">💡</div>
+        <p><strong>New here?</strong> Read <a href="#" data-go="help">How It Works</a>. It takes about two minutes and explains everything in plain words.</p>
+      </div>
+
+      <div class="grid grid-4 completion-spacing">
+        <div class="card stat"><div class="label">Tasks I have</div><div class="value" id="stat-total">0</div><div class="hint">All the work assigned to you</div></div>
+        <div class="card stat"><div class="label">Finished</div><div class="value" id="stat-done">0</div><div class="hint">Approved and complete</div></div>
+        <div class="card stat"><div class="label">Waiting for review</div><div class="value" id="stat-review">0</div><div class="hint">Someone else is checking</div></div>
+        <div class="card stat"><div class="label">Overdue</div><div class="value" id="stat-over">0</div><div class="hint">Past their due date</div></div>
+      </div>
+
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>Your overall progress</h2>
+          <p id="progress-text">Loading…</p>
+          <div class="bar" aria-hidden="true"><span id="progress-bar" class="zero-width"></span></div>
+          <p class="stat-hint-note">Time logged on your tasks: <strong id="stat-time">0m</strong></p>
+        </div>
+        <div class="card">
+          <h2>Team at a glance</h2>
+          <div id="home-team"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- MY TASKS -->
+    <section class="page" id="page-tasks">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Your list</div>
+          <h1>My Tasks</h1>
+          <p>Every task is a card. Press a button to move it, or open History to see what happened.</p>
+        </div>
+        <button class="btn btn-primary" data-add-open id="add-open-btn">+ Add a task</button>
+      </div>
+
+      <div class="card add-card" id="add-form" hidden>
+        <h2>New task</h2>
+        <div class="form-grid">
+          <div><label for="n-title">Task name</label><input id="n-title" type="text" placeholder="For example: Write the onboarding checklist" /></div>
+          <div><label for="n-project">Project</label><select id="n-project"></select></div>
+          <div><label for="n-priority">Priority</label><select id="n-priority"></select></div>
+          <div><label for="n-assignee">Assign to</label><select id="n-assignee"></select></div>
+          <div><label for="n-due">Due date</label><input id="n-due" type="date" /></div>
+        </div>
+        <div class="row task-form-row">
+          <button class="btn btn-primary" id="n-save">Add task</button>
+          <button class="btn" data-add-open>Cancel</button>
+        </div>
+      </div>
+
+      <div id="slot-tasks"></div>
+      <p class="count-line" id="count-tasks"></p>
+      <div id="task-list" class="stack"></div>
+    </section>
+
+    <!-- BOARD -->
+    <section class="page" id="page-board">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Overview</div>
+          <h1>Task Board</h1>
+          <p>Each column is one stage. Drag a card to another column to change its stage. You can only move tasks you have write access to.</p>
+        </div>
+      </div>
+      <div id="slot-board"></div>
+      <div class="board" id="board"></div>
+    </section>
+
+    <!-- TEAM -->
+    <section class="page" id="page-team">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Together</div>
+          <h1>Team</h1>
+          <p>See who is on the team and how their work is going. Admins and team leads can add or remove people.</p>
+        </div>
+      </div>
+      <div class="card" id="team-add-card" class-modifier="team-card">
+        <div class="row">
+          <input id="m-name" type="text" placeholder="Teammate's name" class="max-width-input" />
+          <button class="btn btn-primary" id="m-add">Add teammate</button>
+        </div>
+      </div>
+      <div class="team-grid" id="team-grid"></div>
+    </section>
+
+    <!-- ACCESS -->
+    <section class="page" id="page-access">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Who can do what</div>
+          <h1>Access</h1>
+          <p>Admins set roles. Admins and team leads decide who can read or write each project. Members see only the projects they have access to.</p>
+        </div>
+      </div>
+      <div id="access-notice"></div>
+      <div class="stack">
+        <div class="card">
+          <h2 class="section-title">Roles</h2>
+          <p>Admin: full control. Team lead: manages people and access. Member: works within granted access.</p>
+          <div class="table-wrap"><table><thead><tr><th>Person</th><th>Role</th><th></th></tr></thead><tbody id="roles-body"></tbody></table></div>
+        </div>
+        <div class="card">
+          <h2 class="section-title">Project access</h2>
+          <p>Read: can see tasks but not change them. Write: can see, move, edit, and attach files. None: cannot see the project.</p>
+          <div class="table-wrap"><table><thead id="access-head"></thead><tbody id="access-body"></tbody></table></div>
+        </div>
+        <div class="card">
+          <h2 class="section-title">Projects</h2>
+          <div id="projects-list"></div>
+          <div class="row" id="project-add-row" class-modifier="project-row">
+            <input id="p-name" type="text" placeholder="New project name" class="max-width-input" />
+            <button class="btn btn-primary" id="p-add">Add project</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ACTIVITY -->
+    <section class="page" id="page-activity">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">What happened</div>
+          <h1>Activity</h1>
+          <p>Every move, assignment, rename, and file change, newest first.</p>
+        </div>
+      </div>
+      <div class="filters" id="activity-bar">
+        <input id="a-q" type="search" placeholder="Search by task name or number" />
+        <select id="a-person" aria-label="Person"></select>
+      </div>
+      <p class="count-line" id="activity-count"></p>
+      <div id="activity-list"></div>
+    </section>
+
+    <!-- METRICS -->
+    <section class="page" id="page-metrics">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Your numbers</div>
+          <h1>Metrics</h1>
+          <p>Simple charts built from the activity history. Only tasks you can see are counted.</p>
+        </div>
+      </div>
+      <div class="metrics-grid">
+        <div class="card">
+          <h2>Overall completion</h2>
+          <div class="ring-wrap" id="ring-wrap">
+            <svg viewBox="0 0 120 120" width="160" height="160" role="img" aria-label="Completion ring">
+              <circle cx="60" cy="60" r="52" fill="none" stroke="var(--surface-2)" stroke-width="12"/>
+              <circle id="ring-fg" cx="60" cy="60" r="52" fill="none" stroke="var(--accent)" stroke-width="12" stroke-linecap="round" stroke-dasharray="0 327" transform="rotate(-90 60 60)"/>
+              <text id="ring-text" x="60" y="68" text-anchor="middle" font-size="22" fill="var(--text)" font-family="Iowan Old Style, Georgia, serif">0%</text>
+            </svg>
+          </div>
+          <div class="kpi">
+            <div><strong id="m-total">0</strong><span>Total tasks</span></div>
+            <div><strong id="m-done">0</strong><span>Finished</span></div>
+            <div><strong id="m-over">0</strong><span>Overdue</span></div>
+            <div><strong id="m-cycle">–</strong><span>Average time to finish</span></div>
+          </div>
+        </div>
+        <div class="card"><h2>Tasks by stage</h2><div id="m-stages"></div></div>
+        <div class="card"><h2>Done per person</h2><div id="m-people"></div></div>
+        <div class="card"><h2>Finished this week</h2><div class="wk-chart" id="m-week"></div></div>
+      </div>
+    </section>
+
+    <!-- EXPORT -->
+    <section class="page" id="page-export">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Take it with you</div>
+          <h1>Export</h1>
+          <p>Save your tasks to open in a spreadsheet, keep a backup, or print a report.</p>
+        </div>
+      </div>
+      <div class="export-grid">
+        <div class="card export-card">
+          <h3>Spreadsheet (CSV)</h3>
+          <p>One row per task you can see, with stage, priority, owner, due date, and time logged.</p>
+          <button class="btn btn-primary" data-export="csv">Download CSV</button>
+        </div>
+        <div class="card export-card">
+          <h3>Full backup (JSON)</h3>
+          <p>Everything on this device, including teammates, access, and files. Keep it safe.</p>
+          <button class="btn" data-export="json">Download backup</button>
+        </div>
+        <div class="card export-card">
+          <h3>Restore from backup</h3>
+          <p>Choose a backup file you downloaded before. This replaces what is on this device.</p>
+          <button class="btn" data-import>Choose backup file</button>
+          <input type="file" id="import-file" accept="application/json,.json" hidden />
+        </div>
+        <div class="card export-card">
+          <h3>Print or save as PDF</h3>
+          <p>Opens your browser's print window. Choose "Save as PDF" to get a PDF file.</p>
+          <button class="btn" data-export="print">Print this page</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- HELP -->
+    <section class="page" id="page-help">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Start here</div>
+          <h1>How It Works</h1>
+          <p>Five stages, clear roles, and one simple path through your work.</p>
+        </div>
+      </div>
+      <div class="grid grid-2">
+        <div class="card">
+          <h2>The five stages</h2>
+          <ol class="steps">
+            <li><strong>To Do</strong>Work you have not started yet.</li>
+            <li><strong>In Progress</strong>Work you are doing right now.</li>
+            <li><strong>On Hold</strong>Paused. You must write a short reason.</li>
+            <li><strong>In Review</strong>Finished, and waiting for someone to check it.</li>
+            <li><strong>Done</strong>Checked and approved. Nice work!</li>
+          </ol>
+        </div>
+        <div class="card">
+          <h2>Roles and access</h2>
+          <ol class="steps">
+            <li><strong>Admin</strong>Sets roles, projects, and access for everyone.</li>
+            <li><strong>Team lead</strong>Adds people and decides who can read or write each project.</li>
+            <li><strong>Member</strong>Works on projects with read or write access. Asks a lead for more.</li>
+            <li><strong>Files</strong>Attach a file or a link to a task. Anyone with write access can add or remove them.</li>
+          </ol>
+        </div>
+      </div>
+      <div class="tip tip-extra-margin">
+        <div class="ico">🙋</div>
+        <p><strong>Stuck?</strong> Put the task On Hold and write a short note. That tells your team exactly what you need.</p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Filters for My Tasks and Task Board. Moved into the page that is showing. -->
+<div class="filters" id="filter-bar">
+  <input id="f-q" type="search" placeholder="Search by task name or number" />
+  <select id="f-stage" aria-label="Stage"></select>
+  <select id="f-priority" aria-label="Priority"></select>
+  <select id="f-assignee" aria-label="Assigned to"></select>
+  <button class="btn btn-small btn-ghost" id="f-clear">Clear filters</button>
+</div>
+
+<input type="file" id="att-file" hidden />
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
